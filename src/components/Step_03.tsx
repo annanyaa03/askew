@@ -105,16 +105,22 @@ function useCountUp(target: number, duration: number, triggered: boolean) {
     React.useEffect(() => {
         if (!triggered) return
         let start: number | null = null
+        let animFrameId: number
         const step = (timestamp: number) => {
             if (!start) start = timestamp
             const progress = Math.min((timestamp - start) / duration, 1)
             // ease out cubic
             const eased = 1 - Math.pow(1 - progress, 3)
             setValue(parseFloat((eased * target).toFixed(2)))
-            if (progress < 1) requestAnimationFrame(step)
+            if (progress < 1) {
+                animFrameId = requestAnimationFrame(step)
+            }
         }
-        requestAnimationFrame(step)
-    }, [triggered])
+        animFrameId = requestAnimationFrame(step)
+        return () => {
+            if (animFrameId) cancelAnimationFrame(animFrameId)
+        }
+    }, [triggered, duration, target])
 
     return value
 }

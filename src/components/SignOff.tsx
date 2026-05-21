@@ -5,6 +5,8 @@
 import { useEffect, useRef } from "react"
 import HoverImage from "./HoverImage"
 import replacementImg from "../assets/edited-replacement.png"
+import { navigate } from "../hooks/navigation"
+
 // ─── CONFIG ────────────────────────────────────────────────────────────────────
 const CONFIG = {
     // Layout
@@ -295,6 +297,7 @@ export default function GetStartedHero() {
 
                     {/* CTA button */}
                     <button
+                        onClick={() => navigate("/signup")}
                         style={{
                             display: "flex",
                             alignItems: "center",

@@ -28,3 +28,21 @@ dist-ssr
 /bg-assets/
 /fg-assets/
 /tsx-components/
+
+# Build outputs
+build/
+out/
+.next/
+.nuxt/
+.cache/
+
+# Makefiles
+[Mm]akefile
+*.mk
+
+# Agent workspace artifacts and folders
+.gemini/
+.antigravity/
+*task.md
+*implementation_plan.md
+*walkthrough.md

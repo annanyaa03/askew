@@ -3,6 +3,8 @@
 // Drop into Framer via Assets → Code → New Component
 
 import { useEffect, useRef } from "react"
+import { navigate } from "../hooks/navigation"
+
 
 // ─── CONFIG ────────────────────────────────────────────────────────────────────
 const CONFIG = {
@@ -23,17 +25,17 @@ const CONFIG = {
         {
             heading: "PLATFORM",
             links: [
-                { label: "Home", id: "hero-section" },
-                { label: "How It Works", id: "how-it-works" },
-                { label: "Dashboard", id: "dashboard" },
-                { label: "Get Started", id: "get-started" },
+                { label: "Home", id: "hero-section", path: "" },
+                { label: "How It Works", id: "how-it-works", path: "" },
+                { label: "Dashboard", id: "dashboard", path: "" },
+                { label: "Get Started", id: "get-started", path: "" },
             ],
         },
         {
             heading: "LEGAL",
             links: [
-                { label: "Privacy Policy", id: "" },
-                { label: "Terms of Service", id: "" },
+                { label: "Privacy Policy", id: "", path: "/privacy" },
+                { label: "Terms of Service", id: "", path: "/terms" },
             ],
         },
     ],
@@ -56,16 +58,7 @@ const CONFIG = {
 }
 // ───────────────────────────────────────────────────────────────────────────────
 
-// ─── SCROLL HELPER ────────────────────────────────────────────────────────────
-// Finds the element by Framer anchor ID and scrolls to it smoothly.
-// Framer renders anchor IDs as the HTML `id` attribute on the frame element.
-function scrollToSection(id: string) {
-    if (!id) return
-    const target = document.getElementById(id)
-    if (target) {
-        target.scrollIntoView({ behavior: "smooth", block: "start" })
-    }
-}
+// Scroll helper is replaced inside components to support multi-page cross-linking
 // ───────────────────────────────────────────────────────────────────────────────
 
 export default function Footer() {
@@ -221,6 +214,7 @@ export default function Footer() {
                     <div data-ft-reveal>
                         <button
                             className="ft-cta-btn"
+                            onClick={() => navigate("/signup")}
                             style={{
                                 display: "inline-flex",
                                 alignItems: "center",
@@ -326,19 +320,30 @@ export default function Footer() {
                                     gap: "12px",
                                 }}
                             >
-                                {col.links.map(({ label, id }) => (
+                                {col.links.map(({ label, id, path }) => (
                                     <span
-                                        key={id || label}
-                                        className={id ? "ft-link" : ""}
-                                        onClick={() => scrollToSection(id)}
+                                        key={path || id || label}
+                                        className="ft-link"
+                                        onClick={() => {
+                                            if (path) {
+                                                navigate(path)
+                                            } else if (id) {
+                                                if (window.location.pathname !== "/") {
+                                                    navigate("/#" + id)
+                                                } else {
+                                                    const target = document.getElementById(id)
+                                                    if (target) {
+                                                        target.scrollIntoView({ behavior: "smooth", block: "start" })
+                                                    }
+                                                }
+                                            }
+                                        }}
                                         style={{
                                             fontSize: "15px",
                                             fontWeight: 500,
-                                            color: id
-                                                ? CONFIG.textNav
-                                                : "rgba(255,255,255,0.35)",
+                                            color: CONFIG.textNav,
                                             textDecoration: "none",
-                                            cursor: id ? "pointer" : "default",
+                                            cursor: "pointer",
                                         }}
                                     >
                                         {label}

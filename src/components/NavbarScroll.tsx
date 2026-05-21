@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { navigate } from "../hooks/navigation";
+
 
 export default function NavbarScroll() {
   const [scrolled, setScrolled] = useState(false);
@@ -42,9 +44,13 @@ export default function NavbarScroll() {
   }, []);
 
   const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (window.location.pathname !== "/") {
+      navigate("/#" + id);
+    } else {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     }
   };
 

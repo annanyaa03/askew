@@ -22,7 +22,46 @@ import cloud1 from './assets/bg-assets/cloud1.png'
 import cloud2 from './assets/bg-assets/cloud2.png'
 import clouds4 from './assets/bg-assets/clouds4.png'
 
+import { useEffect } from 'react'
+import { useRouter } from './hooks/navigation'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import TermsOfService from './pages/TermsOfService'
+import SignUp from './pages/SignUp'
+import Dashboard from './pages/Dashboard'
+
 function App() {
+  const { path } = useRouter()
+
+  // Handle cross-page section scrolling
+  useEffect(() => {
+    if (path === "/" && window.location.hash) {
+      const targetId = window.location.hash.substring(1)
+      const timeout = setTimeout(() => {
+        const target = document.getElementById(targetId)
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "start" })
+        }
+      }, 250)
+      return () => clearTimeout(timeout)
+    }
+  }, [path])
+
+  if (path === "/privacy") {
+    return <PrivacyPolicy />
+  }
+
+  if (path === "/terms") {
+    return <TermsOfService />
+  }
+
+  if (path === "/signup") {
+    return <SignUp />
+  }
+
+  if (path === "/dashboard") {
+    return <Dashboard />
+  }
+
   return (
     <>
       {/* ── NAVBAR (fixed) ── */}

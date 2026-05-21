@@ -1,4 +1,6 @@
 import * as React from "react"
+import { navigate } from "../hooks/navigation"
+
 
 // ============================================
 // TWEAK HERE
@@ -88,8 +90,16 @@ export default function AuthCard() {
     const c = CONFIG
     const sora = "'Sora', sans-serif"
 
+    const handleContinue = (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!valid) return
+        sessionStorage.setItem("userEmail", email)
+        navigate("/dashboard")
+    }
+
     return (
-        <div
+        <form
+            onSubmit={handleContinue}
             style={{
                 width: "100%",
                 maxWidth: c.width,
@@ -161,7 +171,7 @@ export default function AuthCard() {
                     padding: 4,
                 }}
             >
-                {c.tabs.options.map((tab) => (
+                {c.tabs.options.map((tab: string) => (
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
@@ -262,21 +272,30 @@ export default function AuthCard() {
 
             {/* Continue button */}
             <button
+                type="submit"
+                disabled={!valid}
                 style={{
                     width: "100%",
                     padding: "18px",
-                    backgroundColor: c.button.bg,
+                    backgroundColor: valid ? c.button.bg : "rgba(0,0,0,0.3)",
                     color: c.button.color,
                     fontSize: c.button.fontSize,
                     fontWeight: c.button.fontWeight,
                     fontFamily: sora,
                     border: "none",
                     borderRadius: c.button.borderRadius,
-                    cursor: "pointer",
+                    cursor: valid ? "pointer" : "not-allowed",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     gap: 8,
+                    transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                    if (valid) e.currentTarget.style.transform = "scale(1.02)"
+                }}
+                onMouseLeave={(e) => {
+                    if (valid) e.currentTarget.style.transform = "scale(1)"
                 }}
             >
                 {c.button.label}
@@ -295,6 +314,6 @@ export default function AuthCard() {
             >
                 {c.footer.text}
             </span>
-        </div>
+        </form>
     )
 }
